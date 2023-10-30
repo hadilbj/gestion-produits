@@ -1,0 +1,20 @@
+<div>
+    <h1>Liste des produits</h1>
+    <!-- <app-entete></app-entete> -->
+
+    <table>
+        <thead>
+            <tr>
+                <th> Id </th>    <th> Code </th>    <th> Designation </th>    <th> Prix </th> <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor = "let p of produits">
+                <td> {{p.id}}</td>
+                <td> {{p.code}}</td> 
+                <td> {{p.designation}}</td> 
+                <td> {{p.prix}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
