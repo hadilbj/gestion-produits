@@ -1,0 +1,53 @@
+/* Style pour le formulaire */
+table {
+    width: 50%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+}
+
+table th {
+    text-align: left;
+    width: 15%;
+}
+
+table td {
+    width: 100%;
+}
+
+/* Style pour les boutons */
+button {
+    display: block;
+    margin-top: 10%;
+}
+
+/* Aligner le bouton Valider au centre */
+button[type="submit"] {
+    margin: 0 auto;
+    display: block;
+}
+
+/* Style pour la liste des produits */
+h1 {
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+/* Style pour les boutons dans la liste des produits */
+table button {
+    margin: 0 5px;
+}
+
+table.product-list {
+    width: 50%;
+}
+
+th.narrow-column {
+    width: 30px; /* Ajustez la largeur minimale selon vos besoins */
+}

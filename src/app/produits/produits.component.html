@@ -1,55 +1,66 @@
-<div>
+<link rel="stylesheet" type="text/css" href="produits.component.css">
+
+<div class="product-form">
     <h1>Fiche Produit</h1>
     <table>
         <tbody>
             <tr>
                 <th>
-                Id:
-                <input type="text">
+                    <label for="id">Id:</label>
                 </th>
+                <td>
+                    <input type="text" id="id" name="id" class="input-field">
+                </td>
             </tr>
             <tr>
                 <th>
-                    Code:
-                    <input type="text">
+                    <label for="code">Code:</label>
                 </th>
+                <td>
+                    <input type="text" id="code" name="code" class="input-field">
+                </td>
             </tr>
             <tr>
                 <th>
-                    Designation:
-                    <input type="text">
+                    <label for="designation">Designation:</label>
                 </th>
+                <td>
+                    <input type="text" id="Designation" name="Designation" class="input-field">
+                </td>
             </tr>
             <tr>
                 <th>
-                    Prix:
-                    <input type="text">
+                    <label for="prix">Prix:</label>
                 </th>
+                <td>
+                    <input type="text" id="Prix" name="Prix" class="input-field">
+                </td>
             </tr>
-            
         </tbody>
-        <button>Valider</button>
+        <button class="submit-button">Valider</button>
     </table>
 
-
     <h1>Liste des produits</h1>
-    <!-- <app-entete></app-entete> -->
 
-    <table>
+    <table class="product-list">
         <thead>
             <tr>
-                <th> Id </th>    <th> Code </th>    <th> Designation </th>    <th> Prix </th> <th>Actions</th>
+                <th class="narrow-column">Id</th>
+                <th>Code</th>
+                <th>Designation</th>
+                <th>Prix</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor = "let p of produits">
-                <td> {{p.id}}</td>
-                <td> {{p.code}}</td> 
-                <td> {{p.designation}}</td> 
-                <td> {{p.prix}}</td>
-                <td> 
-                    <button>Editer</button>
-                    <button>supprimer</button>
+            <tr *ngFor="let p of produits">
+                <td class="narrow-column">{{p.id}}</td>
+                <td>{{p.code}}</td>
+                <td>{{p.designation}}</td>
+                <td>{{p.prix}}</td>
+                <td>
+                    <button class="edit-button">Editer</button>
+                    <button class="delete-button">Supprimer</button>
                 </td>
             </tr>
         </tbody>
