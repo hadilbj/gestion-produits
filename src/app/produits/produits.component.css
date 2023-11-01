@@ -1,6 +1,6 @@
 /* Style pour le formulaire */
 table {
-    width: 50%;
+    width: 10%;
     border-collapse: collapse;
 }
 
@@ -41,7 +41,7 @@ table th, table td {
 
 /* Style pour les boutons dans la liste des produits */
 table button {
-    margin: 0 5px;
+    margin: 3px;
 }
 
 table.product-list {

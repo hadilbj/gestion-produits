@@ -1,68 +1,66 @@
 <link rel="stylesheet" type="text/css" href="produits.component.css">
 
-<div class="product-form">
-    <h1>Fiche Produit</h1>
-    <table>
-        <tbody>
-            <tr>
-                <th>
-                    <label for="id">Id:</label>
-                </th>
-                <td>
-                    <input type="text" id="id" name="id" class="input-field">
+<div> 
+    <h1> Fiche Produit </h1> 
+    <form> 
+        <table> 
+            <tr > 
+                <td> Id: </td> 
+                <td> 
+                    <input id="id" name="id" type="text" /> 
+                </td> 
+            </tr> 
+            <tr > 
+                <td> Code: </td> 
+                <td> 
+                    <input type ="text" name="code" /> 
+                </td> 
+            </tr> 
+            <tr > 
+                <td> Désignation: </td>
+                <td> <input type ="text" name="designation" /> 
+                </td> 
+            </tr> 
+            <tr > 
+                <td> Prix: </td> 
+                <td> 
+                    <input type ="text" name="prix" /> 
+                </td> 
+            </tr> 
+            <tr > 
+                <td [align]="'center'" colspan="2">
+                    <button type="submit" class="submit-button">Valider</button>
+                    <button class="reset-button">Effacer</button>
                 </td>
-            </tr>
-            <tr>
-                <th>
-                    <label for="code">Code:</label>
-                </th>
-                <td>
-                    <input type="text" id="code" name="code" class="input-field">
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <label for="designation">Designation:</label>
-                </th>
-                <td>
-                    <input type="text" id="Designation" name="Designation" class="input-field">
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <label for="prix">Prix:</label>
-                </th>
-                <td>
-                    <input type="text" id="Prix" name="Prix" class="input-field">
-                </td>
-            </tr>
-        </tbody>
-        <button class="submit-button">Valider</button>
-    </table>
-
-    <h1>Liste des produits</h1>
-
-    <table class="product-list">
-        <thead>
-            <tr>
-                <th class="narrow-column">Id</th>
-                <th>Code</th>
+            </tr> 
+        </table> 
+    </form> 
+</div>
+<div> 
+    <h1> liste des produits </h1> 
+    <table> 
+        <thead> 
+            <tr> 
+                <th> Id </th>
+                <th>Code</th> 
                 <th>Designation</th>
-                <th>Prix</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let p of produits">
-                <td class="narrow-column">{{p.id}}</td>
-                <td>{{p.code}}</td>
-                <td>{{p.designation}}</td>
-                <td>{{p.prix}}</td>
-                <td>
-                    <button class="edit-button">Editer</button>
-                    <button class="delete-button">Supprimer</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                <th>Prix</th> 
+                <th colspan="2">Actions</th>
+            </tr> 
+        </thead> 
+        <tbody> 
+            <tr *ngFor = "let p of produits"> 
+                <td> {{p.id}}</td> 
+                <td> {{p.code}}</td> 
+                <td> {{p.designation}}</td> 
+                <td> {{p.prix}}</td> 
+                <td> 
+                    <button> Editer </button> 
+                </td> 
+                <td> 
+                    <button (click)="supprimerProduit"> Supprimer </button> 
+                </td> 
+            </tr> 
+        </tbody> 
+    </table> 
 </div>
