@@ -19,6 +19,8 @@ export class ProduitsComponent {
     {id:3,code:'y10',designation:"salon en cuir",prix:3000}
     ];
 
+    produitEdite: Produit | null = null;
+
     nouveauProduit: Produit = {
       id: 0,
       code: '',
@@ -26,6 +28,10 @@ export class ProduitsComponent {
       prix: 0
     };
     produitCourant = new Produit();
+
+    editerProduit(produit: Produit) {
+      this.produitEdite = produit;
+    }
 
   supprimerProduit(p: Produit) {
     // Afficher une boîte de dialogue pour confirmer la suppression
@@ -73,5 +79,9 @@ export class ProduitsComponent {
     this.produitCourant = new Produit(); // Réinitialise le produitCourant
   }
   
-  
+  editerProduit1(produit: Produit) {
+    this.produitCourant = { ...produit }; // Copie les attributs du produit en cours d'édition dans produitCourant
+    this.produitEdite = produit;
+
+  }
 }
