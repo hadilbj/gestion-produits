@@ -37,57 +37,36 @@ export class ProduitsComponent {
       console.log("Suppression annulée...");
     }
   }
-  validerFormulaire(form: NgForm) 
-  {
-    console.log(form.value);
-    this.produits.push(form.value);
+  validerFormulaire(form: NgForm) {
+    const existingProduct = this.produits.find(p => p.id === form.value.id);
+    if (existingProduct) {
+      const confirmation: boolean = confirm("Le produit avec cet ID existe déjà. Voulez-vous le mettre à jour ?");
+      if (confirmation) {
+        existingProduct.code = form.value.code;
+        existingProduct.designation = form.value.designation;
+        existingProduct.prix = form.value.prix;
+      }
+    } else {
+      console.log("Ajout d'un nouveau produit : ", form.value);
+      this.produits.push(form.value);
+    }
   }
+
     
   ajouterProduit(nouveauProduit: Produit) {
     // Vérifier si un produit avec le même ID existe déjà
     const produitExistant = this.produits.find((produit) => produit.id === nouveauProduit.id);
-  
-    // Si un produit avec le même ID existe
-  if (produitExistant) {
-    // Afficher une boîte de dialogue de confirmation
-    const confirmation = window.confirm("Le produit avec l'ID " + nouveauProduit.id + " existe déjà. Voulez-vous le mettre à jour ?");
 
-    if (confirmation) {
-      // Mettre à jour le produit existant
-      Object.assign(produitExistant, nouveauProduit);
-      console.log("Produit mis à jour avec succès !");
+    // Si un produit avec le même ID existe, empêcher l'ajout
+    if (produitExistant) {
+      console.log("Le produit avec l'ID " + nouveauProduit.id + " existe déjà. Ajout annulé.");
     } else {
-      console.log("Mise à jour annulée.");
-    }
-  } else {
-    // Si un produit avec le même ID n'existe pas, ajouter le nouveau produit à la liste
-    // Assurez-vous que les propriétés du produit sont définies avant de l'ajouter
-    if (nouveauProduit.id !== undefined && nouveauProduit.code !== undefined &&
-        nouveauProduit.designation !== undefined && nouveauProduit.prix !== undefined) {
+      // Sinon, ajouter le nouveau produit à la liste
       this.produits.push(nouveauProduit);
-      console.log("Produit ajouté avec succès !");
-    } else {
-      console.log("Les propriétés du produit ne sont pas toutes définies. Ajout annulé.");
     }
-  }
   }
 
   
-  verifierDoublon(id: number | undefined) {
-    if (id === undefined) {
-      console.log("L'ID est indéfini. Ajout annulé.");
-      return;
-    }
   
-    // Convertir l'ID en nombre
-    const idNumber: number = +id;
-  
-    const produitExistant = this.produits.find((produit) => produit.id === idNumber);
-  
-    if (produitExistant !== undefined) {
-      console.log("Le produit avec l'ID " + idNumber + " existe déjà. Ajout annulé.");
-      // Vous pouvez également afficher un message d'erreur ou mettre en surbrillance le champ, etc.
-    }
-  }
   
 }

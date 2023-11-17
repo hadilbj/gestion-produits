@@ -4,8 +4,7 @@
       <table>
         <tr>
           <td>Id:</td>
-          <td><input id="id" name="id" type="text" [(ngModel)]="produitCourant.id" required [ngModelOptions]="{updateOn: 'blur'}" (blur)="verifierDoublon(produitCourant.id)"/></td>
-        </tr>
+          <td><input id="id" name="id" type="text" [(ngModel)]="produitCourant.id" required /></td>        </tr>
         <tr>
           <td>Code:</td>
           <td><input type ="text" name="code" [(ngModel)]="produitCourant.code" required /></td>
