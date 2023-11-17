@@ -19,6 +19,12 @@ export class ProduitsComponent {
     {id:3,code:'y10',designation:"salon en cuir",prix:3000}
     ];
 
+    nouveauProduit: Produit = {
+      id: 0,
+      code: '',
+      designation: '',
+      prix: 0
+    };
     produitCourant = new Produit();
 
   supprimerProduit(p: Produit) {
@@ -51,8 +57,6 @@ export class ProduitsComponent {
       this.produits.push(form.value);
     }
   }
-
-    
   ajouterProduit(nouveauProduit: Produit) {
     // Vérifier si un produit avec le même ID existe déjà
     const produitExistant = this.produits.find((produit) => produit.id === nouveauProduit.id);
@@ -65,8 +69,9 @@ export class ProduitsComponent {
       this.produits.push(nouveauProduit);
     }
   }
-
-  
+  effacerSaisie() {
+    this.produitCourant = new Produit(); // Réinitialise le produitCourant
+  }
   
   
 }

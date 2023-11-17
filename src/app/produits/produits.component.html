@@ -21,7 +21,7 @@
         <tr>
           <td colspan="2" style="text-align: center;">
             <input type="submit" value="Valider" [disabled]="!produitForm.form.valid" />
-            <button>Effacer</button>
+            <button (click)="effacerSaisie">Effacer</button>
           </td>
         </tr>
       </table>
