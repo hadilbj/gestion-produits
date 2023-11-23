@@ -1,8 +1,9 @@
 
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Produit } from '../model/produit';
 import { NgForm } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 
 
@@ -11,7 +12,29 @@ import { NgForm } from '@angular/forms';
   templateUrl: './produits.component.html',
   styleUrls: ['./produits.component.css']
 })
-export class ProduitsComponent {
+export class ProduitsComponent implements OnInit{
+
+  constructor(private http :HttpClient)
+  {
+
+  }
+
+  ngOnInit(): void {
+      console.log("Initialisation du composant: Récupérer la liste des produits");
+
+      this.http.get<Array<Produit>> ("http://localhost:9999/produits")
+      .subscribe(
+        {
+          next: data=>{
+            console.log("Succès Get");
+            this.produits=data;
+          },
+          error: err=>{
+            console.log("Erreur Get");
+          }
+        }
+      )
+  }
 
   produits: Array<Produit> = [
     {id:1,code:'x12',designation:"Panier plastique",prix:20},
@@ -50,18 +73,71 @@ export class ProduitsComponent {
     }
   }
   validerFormulaire(form: NgForm) {
-    const existingProduct = this.produits.find(p => p.id === form.value.id);
-    if (existingProduct) {
-      const confirmation: boolean = confirm("Le produit avec cet ID existe déjà. Voulez-vous le mettre à jour ?");
-      if (confirmation) {
-        existingProduct.code = form.value.code;
-        existingProduct.designation = form.value.designation;
-        existingProduct.prix = form.value.prix;
+    console.log(form.value);
+    //this.produits.push(this.produitCourant);
+    if (form.value.id != undefined)
+    {
+      console.log("id non vide ...");
+      //flag pour distinguer entre le mode AJOUT et le mode EDIT
+      let nouveau:boolean=true;
+      let index=0;
+      do{
+        let p=this.produits[index];
+        console.log(
+          p.code + ' : ' + p.designation + ': ' + p.prix);
+
+          if (p.id==form.value.id)
+          {
+            //rendre le mode à EDIT 
+            nouveau=false; 
+            console.log('ancien');
+
+            let reponse:boolean = confirm("Produit existant. Confirmez vous la mise à jour de :"+p.designation+" ?");
+            if (reponse==true)
+            {
+              //mettre à jour dans le BackEnd
+              this.http.put<Array<Produit>> ("http://localhost:9999/produits/"+ form.value.id, form.value)
+              .subscribe(
+                {
+                  next: updatedProduit=>{
+                    console.log("Succès PUT");
+                    //mettre à jour le produit aussi dans le tableau "produits" (FrontEnd)
+                    p.code=form.value.code; 
+                    p.designation=form.value.designation; 
+                    p.prix=form.value.prix;
+                    console.log('Mise à jour du produit:' +p.designation);
+                  },
+                  error: err=> { 
+                    console.log("Erreur PUT"); 
+                  }
+                }
+              )
+            }
+            else
+            {
+              console.log("Mise à jour annulée");
+            }
+            //Arrêter la boucle 
+            return;
+          }
+          else{
+            //continuer à boucler 
+            index++;
+          }
       }
-    } else {
-      console.log("Ajout d'un nouveau produit : ", form.value);
-      this.produits.push(form.value);
+      while(nouveau && index<this.produits.length);
+      //en cas d'ajout
+      if (nouveau)
+      {
+        console.log('nouveau'); 
+        this.produits.push(form.value); 
+        console.log("Ajout d'un nouveau produit:"+form.value.designation);
+      }
     }
+    else
+    {
+      console.log("id vide...");
+    } 
   }
   ajouterProduit(nouveauProduit: Produit) {
     // Vérifier si un produit avec le même ID existe déjà
