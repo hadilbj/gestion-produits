@@ -12,6 +12,8 @@ export class ProduitsService {
   // commune pour toutes les méthodes
   urlHote="http://localhost:9999/produits/";
 
+  produits: Produit[] = [];
+
   constructor(private http : HttpClient) { }
 
   getProduits() :Observable<Array<Produit>>
@@ -32,5 +34,9 @@ export class ProduitsService {
   updateProduit(idP: number | undefined, nouveau: Produit)
   {
     return this.http.put(this.urlHote+idP,nouveau);
+  }
+
+  idExiste(id: number): boolean {
+    return this.produits.some(produit => produit.id === id);
   }
 }

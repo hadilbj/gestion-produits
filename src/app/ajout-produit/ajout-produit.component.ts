@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Produit } from '../model/produit'; // Importez la classe Produit depuis le chemin correct
-import { ProduitsService } from '../services/produits.service'; // Importez le service ProduitsService depuis le chemin correct
+import { Produit } from '../model/produit';
+import { ProduitsService } from '../services/produits.service';
 
 @Component({
   selector: 'app-ajout-produit',
@@ -9,10 +9,16 @@ import { ProduitsService } from '../services/produits.service'; // Importez le s
 })
 export class AjoutProduitComponent implements OnInit {
 
+  nouveauProduit: Produit = {
+    id: 0,
+    code: '',
+    designation: '',
+    prix: 0
+  };
+
   constructor(private produitsService: ProduitsService) {}
 
   ngOnInit(): void {
-    // Message affiché au moment de l'affichage du composant
     console.log("Initialisation du composant: Ajouter un nouveau produit");
   }
 
@@ -20,7 +26,14 @@ export class AjoutProduitComponent implements OnInit {
     this.produitsService.addProduit(nouveauProduit).subscribe({
       next: addProduit => {
         console.log("Succès POST", addProduit);
-        // Ajoutez ici le code nécessaire pour traiter le succès de l'ajout du produit
+        alert("Produit ajouté avec succès !");
+        // Réinitialise le formulaire pour préparer une nouvelle insertion
+        this.nouveauProduit = {
+          id: 0,
+          code: '',
+          designation: '',
+          prix: 0
+        };
       },
       error: err => {
         console.log("Erreur POST", err);
@@ -28,4 +41,14 @@ export class AjoutProduitComponent implements OnInit {
       }
     });
   }
+
+  validerFormulaire() {
+  // Vérifier si l'ID est défini avant d'appeler la méthode idExiste
+  if (this.nouveauProduit.id !== undefined && this.produitsService.idExiste(this.nouveauProduit.id)) {
+    alert("Identificateur de produit déjà existant.");
+  } else {
+    this.ajouterProduit(this.nouveauProduit);
+  }
+}
+
 }

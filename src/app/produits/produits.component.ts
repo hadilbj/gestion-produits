@@ -68,43 +68,58 @@ export class ProduitsComponent implements OnInit{
     }
 
     supprimerProduit(p: Produit) {
-      this.produitsService.deleteProduit(p.id).subscribe({
-        next: () => {
-          console.log("Succès DELETE", p);
-          const index = this.produits.indexOf(p);
-          if (index !== -1) {
-            this.produits.splice(index, 1);
+      const confirmation = window.confirm("Voulez-vous vraiment supprimer ce produit ?");
+      
+      if (confirmation) {
+        this.produitsService.deleteProduit(p.id).subscribe({
+          next: () => {
+            console.log("Succès DELETE", p);
+            const index = this.produits.indexOf(p);
+            if (index !== -1) {
+              this.produits.splice(index, 1);
+            }
+          },
+          error: err => {
+            console.log("Erreur DELETE", err);
           }
-        },
-        error: err => {
-          console.log("Erreur DELETE", err);
-        }
-      });
+        });
+      }
     }
-  validerFormulaire(form: NgForm) {
-    if (form.value.id !== undefined) {
-      console.log("id non vide...");
-      this.produitsService.updateProduit(form.value.id, form.value).subscribe({
-        next: updatedProduit => {
-          console.log("Succès PUT", updatedProduit);
-          const index = this.produits.findIndex(p => p.id === form.value.id);
-          if (index !== -1) {
-            this.produits[index] = form.value;
+    
+    validerFormulaire(form: NgForm) {
+      if (this.produitEdite && form.valid) {
+        console.log("Validation du formulaire pour la mise à jour du produit", form.value);
+        this.produitsService.updateProduit(this.produitEdite.id, form.value).subscribe({
+          next: updatedProduit => {
+            console.log("Succès PUT", updatedProduit);
+            // Mettre à jour le produit dans la liste
+            const index = this.produits.findIndex(p => p.id === this.produitEdite!.id);
+            if (index !== -1) {
+              this.produits[index] = form.value;
+            }
+            // Cacher le formulaire après validation
+            this.produitEdite = null;
+          },
+          error: err => {
+            console.log("Erreur PUT", err);
           }
-        },
-        error: err => {
-          console.log("Erreur PUT", err);
-        }
-      });
-    } else {
-      console.log("id vide...");
-      // Ajoutez le code nécessaire pour l'ajout d'un nouveau produit
+        });
+      }
     }
-  }
 
+    afficherFormulaireAjout: boolean = false;
+
+    afficherFormulaireAjoutProduit() {
+      this.afficherFormulaireAjout = true;
+    }
   
-  effacerSaisie() {
+  /*effacerSaisie() {
     this.produitCourant = new Produit(); // Réinitialise le produitCourant
+  }*/
+
+  annulerEdition() {
+    // Annuler l'édition et cacher le formulaire
+    this.produitEdite = null;
   }
   
   editerProduit1(produit: Produit) {

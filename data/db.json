@@ -2,7 +2,7 @@
   "produits": [
     {
       "id": 1,
-      "code": "x13",
+      "code": "x1",
       "designation": "Panier plastique",
       "prix": 20
     },
@@ -19,16 +19,40 @@
       "prix": 3000
     },
     {
-      "id": 4,
-      "code": "z45",
-      "designation": "Ordinateur",
-      "prix": 2500
-    },
-    {
       "id": 5,
       "code": "k4",
       "designation": "chaise",
       "prix": "50"
+    },
+    {
+      "code": "a52",
+      "designation": "ordinateur portable",
+      "prix": "4800",
+      "id": 6
+    },
+    {
+      "id": 7,
+      "code": "k4",
+      "designation": "table",
+      "prix": "100"
+    },
+    {
+      "id": 8,
+      "code": "x13",
+      "designation": "Panier plastique",
+      "prix": "20"
+    },
+    {
+      "id": 9,
+      "code": "a33",
+      "designation": "television",
+      "prix": "1800"
+    },
+    {
+      "id": 10,
+      "code": "689",
+      "designation": "bibliothèque",
+      "prix": "2500"
     }
   ]
 }
