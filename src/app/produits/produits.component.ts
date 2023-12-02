@@ -3,7 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Produit } from '../model/produit';
 import { NgForm } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { ProduitsService } from '../services/produits.service';
 
 
 
@@ -14,26 +14,37 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProduitsComponent implements OnInit{
 
-  constructor(private http :HttpClient)
+  constructor(private produitsService :ProduitsService)
   {
 
   }
 
-  ngOnInit(): void {
-      console.log("Initialisation du composant: Récupérer la liste des produits");
+  ngOnInit(): void 
+  {
+    //Message affiché au moment de l'affichage du composant
+    console.log("Initialisation du composant: Récupérer la liste des produits");
+    //charger les données
+    this.consulterProduits(); 
+  }
 
-      this.http.get<Array<Produit>> ("http://localhost:9999/produits")
-      .subscribe(
-        {
-          next: data=>{
-            console.log("Succès Get");
-            this.produits=data;
-          },
-          error: err=>{
-            console.log("Erreur Get");
-          }
+  consulterProduits()
+  {
+    console.log("Récupérer la liste des produits");
+    //Appeler la méthode 'getProduits' du service pour récupérer les données du JSON
+    this.produitsService.getProduits()
+    .subscribe(
+      {
+        //En cas de succès
+        next: data=> {
+          console.log("Succès GET", data);
+          this.produits=data;
+        },
+        //En cas d'erreur
+        error: err=> {
+          console.log("Erreur GET");
         }
-      )
+      }
+    )
   }
 
   produits: Array<Produit> = [
@@ -56,101 +67,42 @@ export class ProduitsComponent implements OnInit{
       this.produitEdite = produit;
     }
 
-  supprimerProduit(p: Produit) {
-    // Afficher une boîte de dialogue pour confirmer la suppression
-    let reponse: boolean = confirm("Voulez-vous supprimer le produit : " + p.designation + " ?");
-    if (reponse == true) {
-      console.log("Suppression confirmée...");
-      // Chercher l'indice du produit à supprimer
-      let index: number = this.produits.indexOf(p);
-      console.log("Indice du produit à supprimer : " + index);
-      if (index !== -1) {
-        // Supprimer le produit référencé
-        this.produits.splice(index, 1);
-      }
-    } else {
-      console.log("Suppression annulée...");
+    supprimerProduit(p: Produit) {
+      this.produitsService.deleteProduit(p.id).subscribe({
+        next: () => {
+          console.log("Succès DELETE", p);
+          const index = this.produits.indexOf(p);
+          if (index !== -1) {
+            this.produits.splice(index, 1);
+          }
+        },
+        error: err => {
+          console.log("Erreur DELETE", err);
+        }
+      });
     }
-  }
   validerFormulaire(form: NgForm) {
-    console.log(form.value);
-    //this.produits.push(this.produitCourant);
-    if (form.value.id != undefined)
-    {
-      console.log("id non vide ...");
-      //flag pour distinguer entre le mode AJOUT et le mode EDIT
-      let nouveau:boolean=true;
-      let index=0;
-      do{
-        let p=this.produits[index];
-        console.log(
-          p.code + ' : ' + p.designation + ': ' + p.prix);
-
-          if (p.id==form.value.id)
-          {
-            //rendre le mode à EDIT 
-            nouveau=false; 
-            console.log('ancien');
-
-            let reponse:boolean = confirm("Produit existant. Confirmez vous la mise à jour de :"+p.designation+" ?");
-            if (reponse==true)
-            {
-              //mettre à jour dans le BackEnd
-              this.http.put<Array<Produit>> ("http://localhost:9999/produits/"+ form.value.id, form.value)
-              .subscribe(
-                {
-                  next: updatedProduit=>{
-                    console.log("Succès PUT");
-                    //mettre à jour le produit aussi dans le tableau "produits" (FrontEnd)
-                    p.code=form.value.code; 
-                    p.designation=form.value.designation; 
-                    p.prix=form.value.prix;
-                    console.log('Mise à jour du produit:' +p.designation);
-                  },
-                  error: err=> { 
-                    console.log("Erreur PUT"); 
-                  }
-                }
-              )
-            }
-            else
-            {
-              console.log("Mise à jour annulée");
-            }
-            //Arrêter la boucle 
-            return;
+    if (form.value.id !== undefined) {
+      console.log("id non vide...");
+      this.produitsService.updateProduit(form.value.id, form.value).subscribe({
+        next: updatedProduit => {
+          console.log("Succès PUT", updatedProduit);
+          const index = this.produits.findIndex(p => p.id === form.value.id);
+          if (index !== -1) {
+            this.produits[index] = form.value;
           }
-          else{
-            //continuer à boucler 
-            index++;
-          }
-      }
-      while(nouveau && index<this.produits.length);
-      //en cas d'ajout
-      if (nouveau)
-      {
-        console.log('nouveau'); 
-        this.produits.push(form.value); 
-        console.log("Ajout d'un nouveau produit:"+form.value.designation);
-      }
-    }
-    else
-    {
-      console.log("id vide...");
-    } 
-  }
-  ajouterProduit(nouveauProduit: Produit) {
-    // Vérifier si un produit avec le même ID existe déjà
-    const produitExistant = this.produits.find((produit) => produit.id === nouveauProduit.id);
-
-    // Si un produit avec le même ID existe, empêcher l'ajout
-    if (produitExistant) {
-      console.log("Le produit avec l'ID " + nouveauProduit.id + " existe déjà. Ajout annulé.");
+        },
+        error: err => {
+          console.log("Erreur PUT", err);
+        }
+      });
     } else {
-      // Sinon, ajouter le nouveau produit à la liste
-      this.produits.push(nouveauProduit);
+      console.log("id vide...");
+      // Ajoutez le code nécessaire pour l'ajout d'un nouveau produit
     }
   }
+
+  
   effacerSaisie() {
     this.produitCourant = new Produit(); // Réinitialise le produitCourant
   }

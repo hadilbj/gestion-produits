@@ -1,1 +1,26 @@
-<p>ajout-produit works!</p>
+
+<div>
+    <h1>Ajouter un Produit</h1>
+    <form #produitForm="ngForm" (ngSubmit)="ajouterProduit(produitForm.value)">
+      <table>
+        <tr>
+          <td>Code:</td>
+          <td><input type="text" name="code" ngModel required /></td>
+        </tr>
+        <tr>
+          <td>Désignation:</td>
+          <td><input type="text" name="designation" ngModel required /></td>
+        </tr>
+        <tr>
+          <td>Prix:</td>
+          <td><input type="text" name="prix" ngModel required /></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align: center;">
+            <input type="submit" value="Ajouter" [disabled]="!produitForm.form.valid" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  
