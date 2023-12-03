@@ -1,25 +1,23 @@
-<div>
-    <h1>Ajouter un Produit</h1>
-    <form (ngSubmit)="ajouterProduit($event)" #produitForm="ngForm">
-      <table>
-        <tr>
-          <td><label for="code">Code:</label></td>
-          <td><input type="text" name="code" id="code" [(ngModel)]="nouveauProduit.code" required /></td>
-        </tr>
-        <tr>
-          <td><label for="designation">Désignation:</label></td>
-          <td><input type="text" name="designation" id="designation" [(ngModel)]="nouveauProduit.designation" required /></td>
-        </tr>
-        <tr>
-          <td><label for="prix">Prix:</label></td>
-          <td><input type="text" name="prix" id="prix" [(ngModel)]="nouveauProduit.prix" required /></td>
-        </tr>
-        <tr>
-          <td colspan="2" style="text-align: center;">
-            <button type="submit" [disabled]="!produitForm.form.valid">Ajouter</button>
-          </td>
-        </tr>
-      </table>
-    </form>
-  </div>
-  
+<!-- ajout-produit.component.html -->
+<h1>Fiche Produit</h1>
+<form #produitForm="ngForm" (ngSubmit)="validerFormulaire(produitForm)">
+  <table>
+    <tr>
+      <td><label for="code">Code:</label></td>
+      <td><input type="text" id="code" name="code" [(ngModel)]="nouveauProduit.code" required></td>
+    </tr>
+    <tr>
+      <td><label for="designation">Designation:</label></td>
+      <td><input type="text" id="designation" name="designation" [(ngModel)]="nouveauProduit.designation" required></td>
+    </tr>
+    <tr>
+      <td><label for="prix">Prix:</label></td>
+      <td><input type="number" id="prix" name="prix" [(ngModel)]="nouveauProduit.prix" required></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align: center;">
+        <button type="submit">Ajouter Produit</button>
+      </td>
+    </tr>
+  </table>
+</form>

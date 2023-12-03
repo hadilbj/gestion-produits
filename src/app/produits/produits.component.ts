@@ -1,130 +1,173 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { Produit } from '../model/produit';
 import { NgForm } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { ProduitsService } from '../services/produits.service';
-
-
 
 @Component({
   selector: 'app-produits',
   templateUrl: './produits.component.html',
   styleUrls: ['./produits.component.css']
 })
-export class ProduitsComponent implements OnInit{
-
-  constructor(private produitsService :ProduitsService)
-  {
-
-  }
-
-  ngOnInit(): void 
-  {
-    //Message affiché au moment de l'affichage du composant
-    console.log("Initialisation du composant: Récupérer la liste des produits");
-    //charger les données
-    this.consulterProduits(); 
-  }
-
-  consulterProduits()
-  {
-    console.log("Récupérer la liste des produits");
-    //Appeler la méthode 'getProduits' du service pour récupérer les données du JSON
-    this.produitsService.getProduits()
-    .subscribe(
-      {
-        //En cas de succès
-        next: data=> {
-          console.log("Succès GET", data);
-          this.produits=data;
-        },
-        //En cas d'erreur
-        error: err=> {
-          console.log("Erreur GET");
-        }
-      }
-    )
-  }
+export class ProduitsComponent implements OnInit {
+  constructor(private http: HttpClient, private produitsService: ProduitsService) { }
 
   produits: Array<Produit> = [
-    {id:1,code:'x12',designation:"Panier plastique",prix:20},
-    {id:2,code:'y4',designation:"table en bois",prix:100},
-    {id:3,code:'y10',designation:"salon en cuir",prix:3000}
-    ];
+    { id: 1, code: 'x12', designation: "Panier plastique", prix: 20 },
+    { id: 2, code: 'y4', designation: "table en bois", prix: 100 },
+    { id: 3, code: 'y10', designation: "salon en cuir", prix: 3000 }
+  ];
 
-    produitEdite: Produit | null = null;
+  produitEdite: Produit | null = null;
 
-    nouveauProduit: Produit = {
-      id: 0,
-      code: '',
-      designation: '',
-      prix: 0
-    };
-    produitCourant = new Produit();
+  produitCourant = new Produit();
 
-    editerProduit(produit: Produit) {
-      this.produitEdite = produit;
+  ngOnInit(): void {
+    console.log("Initialisation du composant:.....");
+    this.consulterProduits();
+  }
+
+  //editerProduit(produit: Produit) {
+    //this.produitEdite = produit;
+  //}
+
+  consulterProduits() {
+    console.log("Récupérer la liste des produits");
+    this.produitsService.getProduits()
+      .subscribe({
+        next: data => {
+          console.log("Succès GET");
+          this.produits = data;
+        },
+        error: err => {
+          console.log("Erreur GET");
+        }
+      });
+  }
+
+  validerFormulaire(form: NgForm) {
+    console.log(form.value);
+  
+    if (form.value.id !== undefined) {
+      console.log("id non vide ...");
+      // flag pour distinguer entre le mode AJOUT et le mode EDIT
+      let nouveau: boolean = true;
+      let index = 0;
+  
+      do {
+        let p = this.produits[index];
+        console.log(p.code + ' : ' + p.designation + ': ' + p.prix);
+  
+        if (p.id === form.value.id) {
+          // rendre le mode à EDIT
+          nouveau = false;
+          console.log('ancien');
+  
+          let reponse: boolean = confirm("Produit existant. Confirmez vous la mise à jour de :" + p.designation + " ?");
+          if (reponse === true) {
+            // mettre à jour dans le BackEnd
+            this.http.put<Array<Produit>>("http://localhost:9999/produits/" + form.value.id, form.value)
+              .subscribe({
+                next: updatedProduit => {
+                  console.log("Succès PUT");
+                  // mettre à jour le produit aussi dans le tableau "produits" (FrontEnd)
+                  p.code = form.value.code;
+                  p.designation = form.value.designation;
+                  p.prix = form.value.prix;
+                  console.log('Mise à jour du produit:' + p.designation);
+                  // Hide the form after successful update
+                  this.produitEdite = null;
+                },
+                error: err => {
+                  console.log("Erreur PUT");
+                }
+              });
+          } else {
+            console.log("Mise à jour annulée");
+          }
+          // Arrêter la boucle
+          break;
+        } else {
+          // continuer à boucler
+          index++;
+        }
+      } while (nouveau && index < this.produits.length);
+  
+      // en cas d'ajout
+      if (nouveau) {
+        console.log('nouveau');
+        this.produits.push(form.value);
+        console.log("Ajout d'un nouveau produit:" + form.value.designation);
+      }
+    } else {
+      console.log("id vide...");
     }
+  }
+  
 
-    supprimerProduit(p: Produit) {
-      const confirmation = window.confirm("Voulez-vous vraiment supprimer ce produit ?");
-      
-      if (confirmation) {
-        this.produitsService.deleteProduit(p.id).subscribe({
+  ajouterProduit(nouveauProduit: Produit) {
+    this.http.post<Produit>("http://localhost:9999/produits", nouveauProduit)
+      .subscribe({
+        next: addedProduct => {
+          console.log("Succès POST");
+          this.produits.push(addedProduct);
+          console.log("Ajout d'un nouveau produit:" + addedProduct.designation);
+        },
+        error: err => {
+          console.log("Erreur POST");
+        }
+      });
+  }
+
+  mettreAJourProduit(nouveau: Produit, ancien: Produit) {
+    let reponse: boolean = confirm("Produit existant. Confirmez-vous la mise à jour de :" + ancien.designation + " ?");
+    if (reponse == true) {
+      this.http.put<Produit>("http://localhost:9999/produits/" + ancien.id, nouveau)
+        .subscribe({
+          next: updatedProduit => {
+            console.log("Succès PUT");
+            Object.assign(ancien, updatedProduit);
+            console.log('Mise à jour du produit:' + ancien.designation);
+          },
+          error: err => {
+            console.log("Erreur PUT");
+          }
+        });
+    } else {
+      console.log("Mise à jour annulée");
+    }
+  }
+
+  supprimerProduit(produit: Produit) {
+    const reponse: boolean = confirm("Voulez-vous supprimer le produit : " + produit.designation + " ?");
+    if (reponse === true) {
+      console.log("Suppression confirmée...");
+      this.http.delete("http://localhost:9999/produits/" + produit.id)
+        .subscribe({
           next: () => {
-            console.log("Succès DELETE", p);
-            const index = this.produits.indexOf(p);
+            console.log("Succès DELETE");
+            // Remove the product from the local array
+            const index = this.produits.indexOf(produit);
             if (index !== -1) {
               this.produits.splice(index, 1);
             }
           },
           error: err => {
-            console.log("Erreur DELETE", err);
+            console.log("Erreur DELETE");
           }
         });
-      }
+    } else {
+      console.log("Suppression annulée...");
     }
-    
-    validerFormulaire(form: NgForm) {
-      if (this.produitEdite && form.valid) {
-        console.log("Validation du formulaire pour la mise à jour du produit", form.value);
-        this.produitsService.updateProduit(this.produitEdite.id, form.value).subscribe({
-          next: updatedProduit => {
-            console.log("Succès PUT", updatedProduit);
-            // Mettre à jour le produit dans la liste
-            const index = this.produits.findIndex(p => p.id === this.produitEdite!.id);
-            if (index !== -1) {
-              this.produits[index] = form.value;
-            }
-            // Cacher le formulaire après validation
-            this.produitEdite = null;
-          },
-          error: err => {
-            console.log("Erreur PUT", err);
-          }
-        });
-      }
-    }
-
-    afficherFormulaireAjout: boolean = false;
-
-    afficherFormulaireAjoutProduit() {
-      this.afficherFormulaireAjout = true;
-    }
-  
-  /*effacerSaisie() {
-    this.produitCourant = new Produit(); // Réinitialise le produitCourant
-  }*/
-
-  annulerEdition() {
-    // Annuler l'édition et cacher le formulaire
-    this.produitEdite = null;
   }
-  
+
+  effacerSaisie() {
+    this.produitCourant = new Produit();
+  }
+
   editerProduit1(produit: Produit) {
-    this.produitCourant = { ...produit }; // Copie les attributs du produit en cours d'édition dans produitCourant
-    this.produitEdite = produit;
-
+    this.produitCourant = { ...produit };
+    this.produitEdite = produit; // Copy the attributes of the product being edited into produitCourant
   }
+
 }

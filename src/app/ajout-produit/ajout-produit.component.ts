@@ -1,4 +1,6 @@
+// ajout-produit.component.ts
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Produit } from '../model/produit';
 import { ProduitsService } from '../services/produits.service';
 
@@ -16,39 +18,51 @@ export class AjoutProduitComponent implements OnInit {
     prix: 0
   };
 
-  constructor(private produitsService: ProduitsService) {}
+  constructor(private produitsService: ProduitsService) { }
 
   ngOnInit(): void {
-    console.log("Initialisation du composant: Ajouter un nouveau produit");
-  }
-
-  ajouterProduit(nouveauProduit: Produit) {
-    this.produitsService.addProduit(nouveauProduit).subscribe({
-      next: addProduit => {
-        console.log("Succès POST", addProduit);
-        alert("Produit ajouté avec succès !");
-        // Réinitialise le formulaire pour préparer une nouvelle insertion
-        this.nouveauProduit = {
-          id: 0,
-          code: '',
-          designation: '',
-          prix: 0
-        };
+    // Fetch existing products on component initialization
+    this.produitsService.getProduits().subscribe(
+      data => {
+        console.log("Existing products:", data);
+        // Handle the existing products as needed
       },
-      error: err => {
-        console.log("Erreur POST", err);
-        // Ajoutez ici le code nécessaire pour traiter l'erreur lors de l'ajout du produit
+      error => {
+        console.error("Error fetching existing products:", error);
       }
-    });
+    );
   }
 
-  validerFormulaire() {
-  // Vérifier si l'ID est défini avant d'appeler la méthode idExiste
-  if (this.nouveauProduit.id !== undefined && this.produitsService.idExiste(this.nouveauProduit.id)) {
-    alert("Identificateur de produit déjà existant.");
-  } else {
-    this.ajouterProduit(this.nouveauProduit);
+  validerFormulaire(form: NgForm) {
+    if (form.value.id !== undefined) {
+      alert("Identificateur de produit déjà existant.");
+    } else {
+      // Delegate to the service method for adding a new product
+      this.ajouterProduit();
+      // Clear the form for a new insertion
+      form.resetForm();
+    }
+  }
+  ajouterProduit() {
+    // Delegate to the service method for adding a new product
+    this.produitsService.addProduit(this.nouveauProduit).subscribe(
+      addedProduct => {
+        console.log("New product added:", addedProduct);
+        // Handle the added product as needed
+      },
+      error => {
+        console.error("Error adding new product:", error);
+      }
+    );
+  }
+  effacerSaisie() {
+    this.nouveauProduit = {
+      id: 0,
+      code: '',
+      designation: '',
+      prix: 0
+    };
   }
 }
 
-}
+  // Additional methods can be added as needed
