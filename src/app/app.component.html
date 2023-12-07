@@ -1,11 +1,22 @@
-<div>
+<div class="container">
   <nav>
     <table>
       <td *ngFor="let action of actions">
-        <button 
+        <button class="btn btn-success" 
           (click)="setActionCourante(action)"
-          [style.backgroundColor]="action==actionCourante?'yellow':'red'"
+          [style.backgroundColor]="action==actionCourante?'black':'green'"
           routerLink="{{action.route}}">
+          <span *ngIf="action.titre === 'Accueil'">
+            <i class="bi bi-house-door"></i>
+          </span>
+        
+          <span *ngIf="action.titre === 'Produits'">
+            <i class="bi bi-box"></i>
+          </span>
+        
+          <span *ngIf="action.titre === 'Ajouter Produit'">
+            <i class="bi bi-plus"></i>
+          </span>
           {{action.titre}}
         </button>
       </td>

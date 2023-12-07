@@ -4,7 +4,7 @@
       "id": 1,
       "code": "x1",
       "designation": "Panier plastique",
-      "prix": 20
+      "prix": "30"
     },
     {
       "id": 2,
@@ -53,12 +53,6 @@
       "code": "689",
       "designation": "bibliothèque",
       "prix": "2500"
-    },
-    {
-      "id": 11,
-      "code": "a33",
-      "designation": "chaise",
-      "prix": 250
     }
   ]
 }
