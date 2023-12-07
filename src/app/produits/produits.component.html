@@ -15,6 +15,10 @@
         <td><input type="text" name="designation" [(ngModel)]="produitCourant.designation" /></td>
       </tr>
       <tr>
+        <td>Categorie:</td>
+        <td><input type="text" name="categorie" [(ngModel)]="produitCourant.categorie" /></td>
+      </tr>
+      <tr>
         <td>Prix:</td>
         <td><input type="text" name="prix" [(ngModel)]="produitCourant.prix" /></td>
       </tr>
@@ -40,6 +44,7 @@
         <th>Id</th>
         <th>Code</th>
         <th>Désignation</th>
+        <th>Catégorie</th>
         <th>Prix</th>
         <th colspan="2">Actions</th>
       </tr>
@@ -49,6 +54,7 @@
         <td>{{ p.id }}</td>
         <td>{{ p.code }}</td>
         <td>{{ p.designation }}</td>
+        <td>{{ p.categorie}}</td>
         <td>{{ p.prix }}</td>
         <td>
           <button (click)="editerProduit1(p)" class="btn btn-outline-dark">

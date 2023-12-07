@@ -15,6 +15,7 @@ export class AjoutProduitComponent implements OnInit {
     id: 0,
     code: '',
     designation: '',
+    categorie: '',
     prix: 0
   };
 
@@ -60,6 +61,7 @@ export class AjoutProduitComponent implements OnInit {
       id: 0,
       code: '',
       designation: '',
+      categorie: '',
       prix: 0
     };
   }

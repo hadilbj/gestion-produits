@@ -13,9 +13,9 @@ export class ProduitsComponent implements OnInit {
   constructor(private http: HttpClient, private produitsService: ProduitsService) { }
 
   produits: Array<Produit> = [
-    { id: 1, code: 'x12', designation: "Panier plastique", prix: 20 },
-    { id: 2, code: 'y4', designation: "table en bois", prix: 100 },
-    { id: 3, code: 'y10', designation: "salon en cuir", prix: 3000 }
+    { id: 1, code: 'x12', designation: "Panier plastique", categorie:"plastic",prix: 20 },
+    { id: 2, code: 'y4', designation: "table en bois", categorie:"bois",prix: 100 },
+    { id: 3, code: 'y10', designation: "salon en cuir", categorie:"cuir",prix: 3000 }
   ];
 
   produitEdite: Produit | null = null;
@@ -56,7 +56,7 @@ export class ProduitsComponent implements OnInit {
   
       do {
         let p = this.produits[index];
-        console.log(p.code + ' : ' + p.designation + ': ' + p.prix);
+        console.log(p.code + ' : ' + p.designation + ': ' + p.prix + ' : ' + p.categorie);
   
         if (p.id === form.value.id) {
           // rendre le mode à EDIT
@@ -66,7 +66,7 @@ export class ProduitsComponent implements OnInit {
           let reponse: boolean = confirm("Produit existant. Confirmez vous la mise à jour de :" + p.designation + " ?");
           if (reponse === true) {
             // mettre à jour dans le BackEnd
-            this.http.put<Array<Produit>>("http://localhost:9999/produits/" + form.value.id, form.value)
+            this.http.put<Array<Produit>>("http://localhost:3333/produits/" + form.value.id, form.value)
               .subscribe({
                 next: updatedProduit => {
                   console.log("Succès PUT");
@@ -74,6 +74,7 @@ export class ProduitsComponent implements OnInit {
                   p.code = form.value.code;
                   p.designation = form.value.designation;
                   p.prix = form.value.prix;
+                  p.categorie = form.value.categorie;
                   console.log('Mise à jour du produit:' + p.designation);
                   // Hide the form after successful update
                   this.produitEdite = null;
@@ -106,7 +107,7 @@ export class ProduitsComponent implements OnInit {
   
 
   ajouterProduit(nouveauProduit: Produit) {
-    this.http.post<Produit>("http://localhost:9999/produits", nouveauProduit)
+    this.http.post<Produit>("http://localhost:3333/produits", nouveauProduit)
       .subscribe({
         next: addedProduct => {
           console.log("Succès POST");
@@ -122,7 +123,7 @@ export class ProduitsComponent implements OnInit {
   mettreAJourProduit(nouveau: Produit, ancien: Produit) {
     let reponse: boolean = confirm("Produit existant. Confirmez-vous la mise à jour de :" + ancien.designation + " ?");
     if (reponse == true) {
-      this.http.put<Produit>("http://localhost:9999/produits/" + ancien.id, nouveau)
+      this.http.put<Produit>("http://localhost:3333/produits/" + ancien.id, nouveau)
         .subscribe({
           next: updatedProduit => {
             console.log("Succès PUT");
@@ -142,7 +143,7 @@ export class ProduitsComponent implements OnInit {
     const reponse: boolean = confirm("Voulez-vous supprimer le produit : " + produit.designation + " ?");
     if (reponse === true) {
       console.log("Suppression confirmée...");
-      this.http.delete("http://localhost:9999/produits/" + produit.id)
+      this.http.delete("http://localhost:3333/produits/" + produit.id)
         .subscribe({
           next: () => {
             console.log("Succès DELETE");

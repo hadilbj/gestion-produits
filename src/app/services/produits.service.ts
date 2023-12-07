@@ -10,7 +10,7 @@ export class ProduitsService {
   
   // Url du service web de gestion de produits
   // commune pour toutes les méthodes
-  urlHote="http://localhost:9999/produits/";
+  urlHote="http://localhost:3333/produits/";
 
   produits: Produit[] = [];
 
@@ -38,5 +38,9 @@ export class ProduitsService {
 
   idExiste(id: number): boolean {
     return this.produits.some(produit => produit.id === id);
+  }
+  getCategorie() : Observable<Array<Produit>>
+  {
+    return this.http.get<Array<Produit>> (this.urlHote);
   }
 }
