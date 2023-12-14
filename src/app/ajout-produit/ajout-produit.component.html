@@ -12,7 +12,12 @@
     </tr>
     <tr>
       <td><label for="categorie">Categorie:</label></td>
-      <td><input type="text" id="categorie" name="categorie" [(ngModel)]="nouveauProduit.categorie" required></td>
+      <td>
+        <select id="categorie" name="categorie" [(ngModel)]="nouveauProduit.categorie" required>
+          <option value="">Sélectionner une catégorie</option>
+          <option *ngFor="let categorie of categories" [value]="categorie">{{ categorie }}</option>
+        </select>
+      </td>
     </tr>
     <tr>
       <td><label for="prix">Prix:</label></td>

@@ -1,3 +1,4 @@
+
 <div *ngIf="produitEdite">
   <h1 class="container">Fiche Produit</h1>
   <form #produitForm="ngForm" (ngSubmit)="validerFormulaire(produitForm)" class="container">
@@ -38,6 +39,13 @@
 
 <div class="container">
   <h1>Liste des produits</h1>
+  <div class="d-flex justify-content-center mb-3">
+    <label for="categorieFilter" class="mr-2">Filtrer par catégorie:</label>
+    <select id="categorieFilter" [(ngModel)]="filtreCategorie" class="form-control">
+      <option value="">Toutes les catégories</option>
+      <option *ngFor="let categorie of categories" [value]="categorie">{{ categorie }}</option>
+    </select>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>

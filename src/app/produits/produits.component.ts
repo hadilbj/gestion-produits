@@ -12,12 +12,11 @@ import { ProduitsService } from '../services/produits.service';
 export class ProduitsComponent implements OnInit {
   constructor(private http: HttpClient, private produitsService: ProduitsService) { }
 
-  produits: Array<Produit> = [
-    { id: 1, code: 'x12', designation: "Panier plastique", categorie:{code :"plastic"},prix: 20 },
-    { id: 2, code: 'y4', designation: "table en bois", categorie: { code :"bois"},prix: 100 },
-    { id: 3, code: 'y10', designation: "salon en cuir", categorie:{code : "cuir"},prix: 3000 }
-  ];
+produits: Produit[] = [];
 
+  categories: string[] = [];
+
+  filtreCategorie: string = '';
   produitEdite: Produit | null = null;
 
   produitCourant = new Produit();
@@ -25,11 +24,8 @@ export class ProduitsComponent implements OnInit {
   ngOnInit(): void {
     console.log("Initialisation du composant:.....");
     this.consulterProduits();
+    this.consulterCategories();
   }
-
-  //editerProduit(produit: Produit) {
-    //this.produitEdite = produit;
-  //}
 
   consulterProduits() {
     console.log("Récupérer la liste des produits");
@@ -38,6 +34,20 @@ export class ProduitsComponent implements OnInit {
         next: data => {
           console.log("Succès GET");
           this.produits = data;
+        },
+        error: err => {
+          console.log("Erreur GET");
+        }
+      });
+  }
+
+  consulterCategories() {
+    console.log("Récupérer la liste des categories");
+    this.produitsService.getCategories()
+      .subscribe({
+        next: data => {
+          console.log("Succès GET");
+          this.categories = data;
         },
         error: err => {
           console.log("Erreur GET");

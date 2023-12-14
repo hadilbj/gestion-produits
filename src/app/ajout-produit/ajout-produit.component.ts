@@ -4,12 +4,15 @@ import { NgForm } from '@angular/forms';
 import { Produit } from '../model/produit';
 import { ProduitsService } from '../services/produits.service';
 
+
 @Component({
   selector: 'app-ajout-produit',
   templateUrl: './ajout-produit.component.html',
   styleUrls: ['./ajout-produit.component.css']
 })
 export class AjoutProduitComponent implements OnInit {
+
+  
 
   nouveauProduit: Produit = {
     id: 0,
@@ -18,10 +21,12 @@ export class AjoutProduitComponent implements OnInit {
     categorie: {code :''},
     prix: 0
   };
+  categories: string[] = [];
 
   constructor(private produitsService: ProduitsService) { }
 
   ngOnInit(): void {
+
     // Fetch existing products on component initialization
     this.produitsService.getProduits().subscribe(
       data => {
@@ -34,6 +39,7 @@ export class AjoutProduitComponent implements OnInit {
     );
   }
 
+ 
   validerFormulaire(form: NgForm) {
     if (form.value.id !== undefined) {
       alert("Identificateur de produit déjà existant.");

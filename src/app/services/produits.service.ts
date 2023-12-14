@@ -1,3 +1,5 @@
+// produits.service.ts
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,40 +9,29 @@ import { Produit } from '../model/produit';
   providedIn: 'root'
 })
 export class ProduitsService {
-  
-  // Url du service web de gestion de produits
-  // commune pour toutes les méthodes
-  urlHote="http://localhost:3333/produits/";
 
-  produits: Produit[] = [];
+  private urlHote = 'http://localhost:3333/produits/';
+  private apiHote = 'http://localhost:3333/Categories/'; 
+  constructor(private http: HttpClient) { }
+  // Remplacez par l'URL correcte de votre backend
 
-  constructor(private http : HttpClient) { }
 
-  getProduits() :Observable<Array<Produit>>
-  {
-    return this.http.get<Array<Produit>> (this.urlHote);
+  getCategories(): Observable<string[]> {
+    return this.http.get<string[]>(this.apiHote);}
+
+  getProduits(): Observable<Produit[]> {
+    return this.http.get<Produit[]>(this.urlHote);
   }
 
-  deleteProduit(idP: number|undefined)
-  {
-    return this.http.delete (this.urlHote+idP);
+  deleteProduit(idP: number | undefined): Observable<any> {
+    return this.http.delete(this.urlHote + idP);
   }
 
-  addProduit(nouveau: Produit) 
-  {
-    return this.http.post<Array<Produit>> (this.urlHote,nouveau);
+  addProduit(nouveau: Produit): Observable<Produit> {
+    return this.http.post<Produit>(this.urlHote, nouveau);
   }
 
-  updateProduit(idP: number | undefined, nouveau: Produit)
-  {
-    return this.http.put(this.urlHote+idP,nouveau);
-  }
-
-  idExiste(id: number): boolean {
-    return this.produits.some(produit => produit.id === id);
-  }
-  getCategorie() : Observable<Array<Produit>>
-  {
-    return this.http.get<Array<Produit>> (this.urlHote);
+  updateProduit(idP: number | undefined, nouveau: Produit): Observable<Produit> {
+    return this.http.put<Produit>(this.urlHote + idP, nouveau);
   }
 }
