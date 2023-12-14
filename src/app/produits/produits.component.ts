@@ -13,9 +13,9 @@ export class ProduitsComponent implements OnInit {
   constructor(private http: HttpClient, private produitsService: ProduitsService) { }
 
   produits: Array<Produit> = [
-    { id: 1, code: 'x12', designation: "Panier plastique", categorie:"plastic",prix: 20 },
-    { id: 2, code: 'y4', designation: "table en bois", categorie:"bois",prix: 100 },
-    { id: 3, code: 'y10', designation: "salon en cuir", categorie:"cuir",prix: 3000 }
+    { id: 1, code: 'x12', designation: "Panier plastique", categorie:{code :"plastic"},prix: 20 },
+    { id: 2, code: 'y4', designation: "table en bois", categorie: { code :"bois"},prix: 100 },
+    { id: 3, code: 'y10', designation: "salon en cuir", categorie:{code : "cuir"},prix: 3000 }
   ];
 
   produitEdite: Produit | null = null;

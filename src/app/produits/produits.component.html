@@ -54,7 +54,7 @@
         <td>{{ p.id }}</td>
         <td>{{ p.code }}</td>
         <td>{{ p.designation }}</td>
-        <td>{{ p.categorie}}</td>
+        <td>{{ p.categorie?.code}}</td>
         <td>{{ p.prix }}</td>
         <td>
           <button (click)="editerProduit1(p)" class="btn btn-outline-dark">
